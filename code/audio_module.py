@@ -167,7 +167,7 @@ class AudioProcessor:
             #grab_xtts_models(models_root="models", model_name=TTS_COQUI_VOICE)
             self.engine = CoquiEngine(
                 #specific_model="Lasinya",
-                specific_model=TTS_COQUI_VOICE,
+                specific_model=TTS_COQUI_VOICE_MODEL,
                 #local_models_path="./models",
                 voice="reference_audio.wav",
                 speed=1.1,
