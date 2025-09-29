@@ -1,5 +1,6 @@
 # speech to text and text to speech
 realtimestt==0.3.104
+transformers==4.48.0 #fix transformers for coqui
 realtimetts[kokoro,coqui,orpheus]==0.5.5
 
 # webserver dependencies
