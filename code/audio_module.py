@@ -65,6 +65,32 @@ def ensure_lasinya_models(models_root: str = "models", model_name: str = "Lasiny
                 local_dir=base
             )
 
+def ensure_sdogg_models(models_root: str = "models", model_name: str = "S_Dogg") -> None:
+    """
+    Ensures the Coqui XTTS S_Dogg model files are present locally.
+
+    Checks for required model files (config.json, vocab.json, etc.) within
+    the specified directory structure. If any file is missing, it downloads
+    it from the 'KoljaB/XTTS_S_Dogg' Hugging Face Hub repository.
+
+    Args:
+        models_root: The root directory where models are stored.
+        model_name: The specific name of the model subdirectory.
+    """
+    base = os.path.join(models_root, model_name)
+    create_directory(base)
+    files = ["config.json", "vocab.json", "speakers_xtts.pth", "model.pth"]
+    for fn in files:
+        local_file = os.path.join(base, fn)
+        if not os.path.exists(local_file):
+            # Not using logger here as it might not be configured yet during module import/init
+            print(f"👄⏬ Downloading {fn} to {base}")
+            hf_hub_download(
+                repo_id="KoljaB/XTTS_S_Dogg",
+                filename=fn,
+                local_dir=base
+            )           
+
 class AudioProcessor:
     """
     Manages Text-to-Speech (TTS) synthesis using various engines via RealtimeTTS.
@@ -103,7 +129,8 @@ class AudioProcessor:
 
         # Dynamically load and configure the selected TTS engine
         if engine == "coqui":
-            ensure_lasinya_models(models_root="models", model_name="Lasinya")
+            #ensure_lasinya_models(models_root="models", model_name="Lasinya")
+            ensure_sdogg_models(models_root="models", model_name="S_Dogg")
             self.engine = CoquiEngine(
                 specific_model="Lasinya",
                 local_models_path="./models",
