@@ -17,7 +17,12 @@ from RealtimeTTS import (CoquiEngine, KokoroEngine, OrpheusEngine,
 logger = logging.getLogger(__name__)
 
 # Default configuration constants
-START_ENGINE = "coqui"
+TTS_START_ENGINE = os.environ.get("TTS_START_ENGINE", "coqui")
+START_ENGINE = TTS_START_ENGINE
+
+TTS_COQUI_VOICE_MODEL = os.environ.get("TTS_COQUI_VOICE_MODEL", "v2.0.2")
+
+
 Silence = namedtuple("Silence", ("comma", "sentence", "default"))
 ENGINE_SILENCES = {
     "coqui":   Silence(comma=0.3, sentence=0.6, default=0.3),
@@ -162,7 +167,7 @@ class AudioProcessor:
             #grab_xtts_models(models_root="models", model_name=TTS_COQUI_VOICE)
             self.engine = CoquiEngine(
                 #specific_model="Lasinya",
-                #specific_model=TTS_COQUI_VOICE,
+                specific_model=TTS_COQUI_VOICE,
                 #local_models_path="./models",
                 voice="reference_audio.wav",
                 speed=1.1,

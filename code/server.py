@@ -28,7 +28,8 @@ from fastapi.staticfiles import StaticFiles
 from starlette.responses import HTMLResponse, Response, FileResponse
 
 USE_SSL = False
-TTS_START_ENGINE = "coqui"
+TTS_START_ENGINE = os.environ.get("TTS_START_ENGINE", "coqui")
+
 #orpheus, kokoro, coqui"
 TTS_ORPHEUS_MODEL = "orpheus-3b-0.1-ft-Q8_0-GGUF/orpheus-3b-0.1-ft-q8_0.gguf"
 
