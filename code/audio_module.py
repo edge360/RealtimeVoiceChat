@@ -130,9 +130,11 @@ class AudioProcessor:
         # Dynamically load and configure the selected TTS engine
         if engine == "coqui":
             #ensure_lasinya_models(models_root="models", model_name="Lasinya")
-            ensure_sdogg_models(models_root="models", model_name="S_Dogg")
+            TTS_COQUI_VOICE = "S_Dogg"
+            ensure_sdogg_models(models_root="models", model_name=TTS_COQUI_VOICE)
             self.engine = CoquiEngine(
-                specific_model="Lasinya",
+                #specific_model="Lasinya",
+                specific_model=TTS_COQUI_VOICE,
                 local_models_path="./models",
                 voice="reference_audio.wav",
                 speed=1.1,
