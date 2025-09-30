@@ -120,7 +120,7 @@ class AudioProcessor:
             self.engine = CoquiEngine(
                 #specific_model="Lasinya",
                 specific_model=TTS_COQUI_VOICE_MODEL,
-                #local_models_path="./models",
+                local_models_path="./models",
                 voice=TTS_COQUI_VOICE_REF_AUDIO ,
                 speed=1.0,
                 use_deepspeed=True,
