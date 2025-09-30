@@ -31,8 +31,10 @@ ENGINE_SILENCES = {
     "orpheus": Silence(comma=0.3, sentence=0.6, default=0.3),
 }
 # Stream chunk sizes influence latency vs. throughput trade-offs
-QUICK_ANSWER_STREAM_CHUNK_SIZE = 8
-FINAL_ANSWER_STREAM_CHUNK_SIZE = 30
+#QUICK_ANSWER_STREAM_CHUNK_SIZE = 8
+#FINAL_ANSWER_STREAM_CHUNK_SIZE = 30
+QUICK_ANSWER_STREAM_CHUNK_SIZE = 16
+FINAL_ANSWER_STREAM_CHUNK_SIZE = 42
 
 # Coqui model download helper functions
 def create_directory(path: str) -> None:
@@ -120,7 +122,7 @@ class AudioProcessor:
                 specific_model=TTS_COQUI_VOICE_MODEL,
                 #local_models_path="./models",
                 voice=TTS_COQUI_VOICE_REF_AUDIO ,
-                speed=1.1,
+                speed=1.0,
                 use_deepspeed=True,
                 thread_count=6,
                 stream_chunk_size=self.current_stream_chunk_size,
@@ -379,6 +381,7 @@ class AudioProcessor:
         on_audio_chunk.first_call = True
         on_audio_chunk.callback_fired = False
 
+        #synthesize
         play_kwargs = dict(
             log_synthesized_text=True, # Log the text being synthesized
             on_audio_chunk=on_audio_chunk,
@@ -388,6 +391,9 @@ class AudioProcessor:
             sentence_silence_duration=self.silence.sentence,
             default_silence_duration=self.silence.default,
             force_first_fragment_after_words=999999, # Don't force early fragments
+            minimum_first_fragment_length=48,   # NEW: ~ 40–60 chars
+            minimum_sentence_length=36,         # NEW: ~ 30–60 chars
+            buffer_threshold_seconds=0.6,       # NEW: ~ 0.5–0.8s prebuffer
         )
 
         logger.info(f"👄▶️ {generation_string} Quick Starting synthesis. Text: {text[:50]}...")
@@ -553,6 +559,7 @@ class AudioProcessor:
         on_audio_chunk.first_call = True
         on_audio_chunk.callback_fired = False
 
+        #sythesize generator
         play_kwargs = dict(
             log_synthesized_text=True, # Log text from generator
             on_audio_chunk=on_audio_chunk,
@@ -562,6 +569,9 @@ class AudioProcessor:
             sentence_silence_duration=self.silence.sentence,
             default_silence_duration=self.silence.default,
             force_first_fragment_after_words=999999,
+            minimum_first_fragment_length=60,   # NEW: ~ 40–60 chars
+            minimum_sentence_length=50,         # NEW: ~ 30–60 chars
+            buffer_threshold_seconds=0.7,       # NEW: ~ 0.5–0.8s prebuffer
         )
 
         # Add Orpheus specific parameters for generator streaming
